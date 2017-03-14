@@ -1,0 +1,214 @@
+{
+    "endpoints": [
+        {
+            "path": "all",
+            "method": "GET",
+            "parameters": [
+                {
+                    "name": "ace",
+                    "required": false,
+                    "type": "bool",
+                    "default": true
+                },
+                {
+                    "name": "archive",
+                    "required": false,
+                    "type": "bool",
+                    "default": false
+                },
+                {
+                    "name": "forecast",
+                    "required": false,
+                    "type": "bool",
+                    "default": true
+                },
+                {
+                    "name": "images",
+                    "required": false,
+                    "type": "bool",
+                    "default": false
+                },
+                {
+                    "name": "lat",
+                    "required": true,
+                    "type": "float",
+                    "default": null,
+                    "range":{
+                        "min": -90,
+                        "max": 90
+                    }
+                },
+                {
+                    "name": "long",
+                    "required": true,
+                    "type": "float",
+                    "default": null,
+                    "range": {
+                        "min": -180,
+                        "max": 180
+                    }
+                },
+                {
+                    "name": "probability",
+                    "required": false,
+                    "type": "bool",
+                    "default": true
+                },
+                {
+                    "name": "threeday",
+                    "required": false,
+                    "type": "bool",
+                    "default": true
+                },
+                {
+                    "name": "twentysevenday",
+                    "required": false,
+                    "type": "bool",
+                    "default": false
+                },
+                {
+                    "name": "weather",
+                    "required": false,
+                    "type": "bool",
+                    "default": true
+                }
+            ]
+        },
+        {
+            "path": "ace",
+            "method": "GET",
+            "parameters": [
+                {
+                    "name": "data",
+                    "required": true,
+                    "type": "string",
+                    "default": null,
+                    "range": [
+                        "bz", "speed", "density", "kp", "threeday", "twentysevenday", "probability", "all"
+                    ]
+                },
+                {
+                    "name": "lat",
+                    "required": "data==probability",
+                    "type": "float",
+                    "default": null
+                },
+                {
+                    "name": "long",
+                    "required": "data==probability",
+                    "type": "float",
+                    "default": null
+                }
+            ]
+        },
+        {
+            "path": "archive",
+            "method": "GET",
+            "parameters": [
+                {
+                    "name": "action",
+                    "required": true,
+                    "type": "string",
+                    "default": null,
+                    "range": [
+                        "stats", "search"
+                    ]
+                },
+                {
+                    "name": "end",
+                    "required": "action==search",
+                    "type": "date",
+                    "default": null
+                },
+                {
+                    "name": "start",
+                    "required": "action==search",
+                    "type": "date",
+                    "default": null
+                }
+            ]
+        },
+        {
+            "path": "embed",
+            "method": "GET",
+            "parameters": [
+                {
+                    "name": "image",
+                    "required": true,
+                    "type": "string",
+                    "default": null,
+                    "range": [
+                        "current", "weather"
+                    ]
+                },
+                {
+                    "name": "lat",
+                    "required": "image==weather",
+                    "type": "float",
+                    "default": null,
+                    "range":{
+                        "min": -90,
+                        "max": 90
+                    }
+                },
+                {
+                    "name": "long",
+                    "required": "image==weather",
+                    "type": "float",
+                    "default": null,
+                    "range":{
+                        "min": -180,
+                        "max": 180
+                    }
+                }
+            ]
+        },
+        {
+            "path": "images",
+            "method": "GET",
+            "parameters": [
+                {
+                    "name": "action",
+                    "required": "image==null",
+                    "type": "string",
+                    "default": null
+                },
+                {
+                    "name": "action",
+                    "required": "action!=list",
+                    "type": "string",
+                    "default": null
+                }
+            ]
+        },
+        {
+            "path": "locations",
+            "method": "GET",
+            "parameters": []
+        },
+        {
+            "path": "weather",
+            "method": "GET",
+            "parameters": [
+                {
+                    "name": "forecast",
+                    "required": false,
+                    "type": "bool",
+                    "default": false
+                },
+                {
+                    "name": "lat",
+                    "required": true,
+                    "type": "float",
+                    "default": null
+                },
+                {
+                    "name": "long",
+                    "required": true,
+                    "type": "float",
+                    "default": null
+                }
+            ]
+        }
+    ]
+}
