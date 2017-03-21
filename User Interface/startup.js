@@ -12,6 +12,7 @@ global.CONFIG = {
     certPath: null,
     port: 80,
     endpointPath: __dirname + "/auroraEndpoints.json",
+    secure: require(__dirname + "/secure.json"),
     baseAPI: "https://api.auroras.live/v1/"
 };
 preferenceParsing.parse(function callback () {

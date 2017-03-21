@@ -6,6 +6,7 @@
 "use strict";
 var requestBuilder = require(__dirname + "/requestBuilder");
 var dataRequester = require(__dirname + "/Aurora Data/requester");
+var customEndpoints = require(__dirname + "/customEndpoints");
 
 var connections = {};
 module.exports = function requestHandler (request, response) {
@@ -34,6 +35,13 @@ module.exports = function requestHandler (request, response) {
             console.log(`[R] [${ID}] Ending request`);
             delete connections[ID];
             response.end(JSON.stringify(err));
+            return;
+        }
+
+        // not part of aurora
+        if (requestObj.local) {
+            console.log(`[R] [${ID}] Invoking custom endpoint builder`);
+            customEndpoints[requestObj.module].invoke(ID, requestObj, request, response);
             return;
         }
 

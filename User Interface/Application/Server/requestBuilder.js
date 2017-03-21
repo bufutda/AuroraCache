@@ -43,6 +43,14 @@ function RequestBuilder (ID, method, query) {
     }
     console.log(`[RB] [${ID}] Module OK (${self.module})`);
 
+    if (ep.hasOwnProperty("local")) {
+        console.log(`[RB] [${ID}] Module is local`);
+        self.local = true;
+    } else {
+        self.local = false;
+        console.log(`[RB] [${ID}] Module is remote`);
+    }
+
     // check method
     console.log(`[RB] [${ID}] Checking method`);
     if (ep.method !== method) {
@@ -139,6 +147,7 @@ function RequestBuilder (ID, method, query) {
 
         // all ok
         self.params[ep.parameters[i].name] = query[ep.parameters[i].name];
+        console.log(`[RB] [${ID}]`, self.params);
     }
 
     function error (message, status) {

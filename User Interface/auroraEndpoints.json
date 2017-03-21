@@ -209,6 +209,20 @@
                     "default": null
                 }
             ]
+        },
+        {
+            "path": "map",
+            "method": "GET",
+            "local": true,
+            "parameters": [
+                {
+                    "name": "id",
+                    "required": true,
+                    "type": "string",
+                    "default": null,
+                    "range": ["athabasca","capeliptrap","cherryspringsstatepark","cressy","fairbanks","flinders","inverloch","iqaluit","longyearbyen","melfort","mounttassie","pointaddis","portland","splitpoint","tromsø","whitehorse","yellowknife"]
+                }
+            ]
         }
     ]
 }
