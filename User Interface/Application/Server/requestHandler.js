@@ -33,6 +33,7 @@ module.exports = function requestHandler (request, response) {
         if (err) {
             console.error(`[R] [${ID}] Bad request:`, err.message);
             console.log(`[R] [${ID}] Ending request`);
+            response.statusCode = err.status;
             delete connections[ID];
             response.end(JSON.stringify(err));
             return;
@@ -49,13 +50,15 @@ module.exports = function requestHandler (request, response) {
         // TODO -> Use the built request to check the cache
 
         // no cache entry; grab data from aurora
-        dataRequester.request(ID, requestObj, function callback (err, mime, aurora) {
+        dataRequester.request(ID, requestObj, function callback (err, mime, aurora, status) {
             if (err) {
                 console.error(`[DR] [${ID}] Error: ${err.message}`);
                 console.log(`[R] [${ID}] Ending request`);
                 delete connections[ID];
+                response.statusCode = err.status;
                 try {
                     aurora = JSON.parse(aurora);
+                    response.statusCode = aurora.status ? aurora.status : err.status;
                     response.end(JSON.stringify(aurora));
                 } catch (e) {
                     response.end(JSON.stringify({message: err.message, module: err.module, status: err.status}));
@@ -64,6 +67,7 @@ module.exports = function requestHandler (request, response) {
             }
             response.setHeader("Content-Type", mime);
             response.setHeader("transfer-encoding", "chunked");
+            response.statusCode = status;
             if (mime === "application/json") {
                 aurora.note = "Powered by Auroras.live";
                 aurora = JSON.stringify(aurora);

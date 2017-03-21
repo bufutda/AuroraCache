@@ -19,11 +19,6 @@ module.exports.request = function (ID, req, callback) {
             callback({message: "Internal Requester Error", status: 500, module: req.module});
             return;
         }
-        if (response.statusCode !== 200) {
-            console.error(`[FAD] [${ID}] Request error code ${response.statusCode}`);
-            callback({message: "Bad Aurora Request", status: response.statusCode, module: req.module}, response.headers["content-type"], body);
-            return;
-        }
         switch (response.headers["content-type"]) {
             case "application/json":
                 try {
@@ -31,10 +26,10 @@ module.exports.request = function (ID, req, callback) {
                 } catch (e) {
                     console.error(`[FAD] [${ID}] Bad JSON response`);
                 }
-                callback(null, response.headers["content-type"], body); // eslint-disable-line callback-return
+                callback(null, response.headers["content-type"], body, response.statusCode); // eslint-disable-line callback-return
                 return;
             case "image/jpeg":
-                callback(null, response.headers["content-type"], body); // eslint-disable-line callback-return
+                callback(null, response.headers["content-type"], body, response.statusCode); // eslint-disable-line callback-return
                 return;
             default:
                 console.error(`[FAD] [${ID}] Bad response MIME: ${response.headers["content-type"]}`);

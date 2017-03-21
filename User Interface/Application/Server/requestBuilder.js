@@ -94,6 +94,8 @@ function RequestBuilder (ID, method, query) {
         console.log(`[RB] [${ID}] [${ep.parameters[i].name}] checking type`);
         switch (ep.parameters[i].type) {
             case "string":
+                /* falls through */
+            case "date":
                 break;
             case "bool":
                 if (query[ep.parameters[i].name] === "true") {
