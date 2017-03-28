@@ -19,4 +19,7 @@
      }
      console.log("[DFCL] Listening on " + CONFIG.port);
      server.listen(CONFIG.port);
+     if (process.send) {
+         process.send("OK");
+     }
  };

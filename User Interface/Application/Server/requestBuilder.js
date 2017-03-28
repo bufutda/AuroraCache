@@ -42,6 +42,9 @@ function RequestBuilder (ID, method, query) {
             ep = ENDPOINTS[prop];
         }
     }
+    if (!query.hasOwnProperty("type") || query.type === "undefined") {
+        query.type = "";
+    }
     if (self.module === "main" || typeof ep === "undefined") {
         error("API 'type'" + query.type + " not found", 400);
         return;
@@ -116,34 +119,35 @@ function RequestBuilder (ID, method, query) {
         }
 
         // type validation
-        console.log(`[RB] [${ID}] [${ep.parameters[i].name}] checking type`);
-        switch (ep.parameters[i].type) {
-            case "string":
-                /* falls through */
-            case "date":
-                break;
-            case "bool":
-                if (query[ep.parameters[i].name] === "true") {
-                    query[ep.parameters[i].name] = true;
-                } else if (query[ep.parameters[i].name] === "false") {
-                    query[ep.parameters[i].name] = false;
-                } else {
-                    error("Invalid value for parameter: " + ep.parameters[i].name, 400);
-                    return;
-                }
-                break;
-            case "float":
-                if (!isNaN(parseFloat(query[ep.parameters[i].name], 10))) {
-                    query[ep.parameters[i].name] = parseFloat(query[ep.parameters[i].name], 10);
-                } else {
-                    error("Invalid value for parameter: " + ep.parameters[i].name, 400);
-                    return;
-                }
-                break;
-            default:
-                throw new Error("Unknown parameter type: " + ep.parameters[i].type);
-        }
-        console.log(`[RB] [${ID}] [${ep.parameters[i].name}] type is OK`);
+        console.warn(`[RB] [${ID}] [${ep.parameters[i].name}] skipping type validation - auroras doensn't do it`);
+        // console.log(`[RB] [${ID}] [${ep.parameters[i].name}] checking type`);
+        // switch (ep.parameters[i].type) {
+        //     case "string":
+        //         /* falls through */
+        //     case "date":
+        //         break;
+        //     case "bool":
+        //         if (query[ep.parameters[i].name] === "true") {
+        //             query[ep.parameters[i].name] = true;
+        //         } else if (query[ep.parameters[i].name] === "false") {
+        //             query[ep.parameters[i].name] = false;
+        //         } else {
+        //             error("Invalid value for parameter: " + ep.parameters[i].name, 400);
+        //             return;
+        //         }
+        //         break;
+        //     case "float":
+        //         if (!isNaN(parseFloat(query[ep.parameters[i].name], 10))) {
+        //             query[ep.parameters[i].name] = parseFloat(query[ep.parameters[i].name], 10);
+        //         } else {
+        //             error("Invalid value for parameter: " + ep.parameters[i].name, 400);
+        //             return;
+        //         }
+        //         break;
+        //     default:
+        //         throw new Error("Unknown parameter type: " + ep.parameters[i].type);
+        // }
+        // console.log(`[RB] [${ID}] [${ep.parameters[i].name}] type is OK`);
 
         // range validation
         console.log(`[RB] [${ID}] [${ep.parameters[i].name}] checking range`);
@@ -158,11 +162,13 @@ function RequestBuilder (ID, method, query) {
                 console.log(`[RB] [${ID}] [${ep.parameters[i].name}] range check is min/max`);
                 if (query[ep.parameters[i].name] < ep.parameters[i].range.min) {
                     console.log(`[RB] [${ID}] [${ep.parameters[i].name}] min failed: (${query[ep.parameters[i].name]} < ${ep.parameters[i].range.min})`);
+                    self.module = "weather/forecast";
                     error("Invalid information passed to http://api.met.no/weatherapi", 400);
                     return;
                 }
                 if (query[ep.parameters[i].name] > ep.parameters[i].range.max) {
                     console.log(`[RB] [${ID}] [${ep.parameters[i].name}] max failed: (${query[ep.parameters[i].name]} > ${ep.parameters[i].range.max})`);
+                    self.module = "weather/forecast";
                     error("Invalid information passed to http://api.met.no/weatherapi", 400);
                     return;
                 }

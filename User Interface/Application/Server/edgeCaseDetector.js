@@ -13,7 +13,7 @@ module.exports = {
         if (typeof oldQuery.data === "undefined") {
             oldQuery.data = "";
         }
-        if (ep.parameters[0].indexOf(oldQuery.data) === -1) {
+        if (ep.parameters[0].range.indexOf(oldQuery.data) === -1) {
             // data invalid
             callback({message: "Request type not found: " + oldQuery.data, code: 400});
             return;
@@ -25,7 +25,7 @@ module.exports = {
         if (typeof oldQuery.action === "undefined") {
             oldQuery.action = "";
         }
-        if (ep.parameters[0].indexOf(oldQuery.action) === -1) {
+        if (ep.parameters[0].range.indexOf(oldQuery.action) === -1) {
             // action invalid
             callback({message: "Archive action " + oldQuery.action + " not found", code: 404});
             return;
@@ -41,18 +41,18 @@ module.exports = {
     },
     weather: function (ID, oldQuery, ep, callback) {
         if (oldQuery.hasOwnProperty("forecast")) {
-            if (oldQuery.forecast.length && oldQuery.forecast !== "0") {
+            if (oldQuery.forecast !== "" && oldQuery.forecast !== "undefined" && oldQuery.forecast !== "0") {
                 console.log(`[ECD] [${ID}] changing forecast from \"${oldQuery.forecast}\" to \"true\"`);
                 oldQuery.forecast = "true";
             } else {
-                console.log(`[ECD] [${ID}] changing forecast from \"${oldQuery.forecast}\" to \"false\"`);
-                oldQuery.forecast = "false";
+                console.log(`[ECD] [${ID}] changing forecast from \"${oldQuery.forecast}\" to \"0\"`);
+                oldQuery.forecast = "0";
             }
             callback(null, oldQuery);
             return;
         }
         console.log(`[ECD] [${ID}] changing forecast from undefined to false`);
-        oldQuery.forecast = false;
+        oldQuery.forecast = "0";
         callback(null, oldQuery);
         return;
     },

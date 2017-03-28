@@ -1,34 +1,3 @@
-{
-"message": "Parameter is missing from request: long",
-"module": "weather",
-"statusCode": 404
-}
-
-{
-"message": "API 'type'wether not found",
-"module": "main",
-"statusCode": 400
-}
-
-{
-"message": "Archive action null not found",
-"module": "archive",
-"statusCode": 404
-}
-
-{
-"message": "Request type not found: denity",
-"module": "ace",
-"statusCode": 400
-}
-
-(long/lat out of range)
-{
-"message": "Invalid information passed to http://api.met.no/weatherapi",
-"module": "weather/forecast",
-"statusCode": 400
-}
-
 ACE
 if data=probability
 long/lat are not bounded
@@ -84,16 +53,6 @@ DEFAULT TRUE (all;weather)
 &weather=false - false
 &weather=dlfkgj - false
 
-DEFAULT FALSE (weather;forecast)
- - false
-&forecast - false
-&forecast= - false
-&forecast=0 - false
-&forecast=1 - true
-&forecast=true - true
-&forecast=false - true
-&forecase=sdkfj - true
-
 DEFAULT FALSE (all;images)
  - false
 &images - false
@@ -103,3 +62,13 @@ DEFAULT FALSE (all;images)
 &images=true - true
 &images=false - false
 &images=sldkjf - false
+
+DEFAULT FALSE (weather;forecast)
+ - false
+&forecast - false
+&forecast= - false
+&forecast=0 - false
+&forecast=1 - true
+&forecast=true - true
+&forecast=false - true
+&forecase=sdkfj - true

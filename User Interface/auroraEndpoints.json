@@ -171,13 +171,13 @@
             "parameters": [
                 {
                     "name": "action",
-                    "required": "image==null",
+                    "required": false,
                     "type": "string",
                     "default": null
                 },
                 {
-                    "name": "action",
-                    "required": "action!=list",
+                    "name": "image",
+                    "required": false,
                     "type": "string",
                     "default": null
                 }

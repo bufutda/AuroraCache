@@ -33,11 +33,12 @@ module.exports = function requestHandler (request, response) {
         if (err) {
             console.error(`[R] [${ID}] Bad request:`, err.message);
             console.log(`[R] [${ID}] Ending request`);
-            response.statusCode = err.status;
+            response.statusCode = err.statusCode;
             delete connections[ID];
             response.end(JSON.stringify(err));
             return;
         }
+        console.log(`[R] [${ID}] Built request is ${requestObj.queryString()}`);
 
         // not part of aurora
         if (requestObj.local) {
