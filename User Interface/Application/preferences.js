@@ -38,6 +38,9 @@ module.exports.parse = function (callback) {
     for (var i = 0; i < endpoints.length; i++) {
         var ep = endpoints[i];
         ENDPOINTS[ep.path] = ep;
+        if (ep.hasOwnProperty("comment")) {
+            console.warn("[UPH] Warning in " + ep.path + ": " + ep.comment);
+        }
     }
     console.log("[UPH] Endpoint parsing complete");
     callback();

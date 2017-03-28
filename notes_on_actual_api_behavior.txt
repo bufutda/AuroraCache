@@ -1,0 +1,105 @@
+{
+"message": "Parameter is missing from request: long",
+"module": "weather",
+"statusCode": 404
+}
+
+{
+"message": "API 'type'wether not found",
+"module": "main",
+"statusCode": 400
+}
+
+{
+"message": "Archive action null not found",
+"module": "archive",
+"statusCode": 404
+}
+
+{
+"message": "Request type not found: denity",
+"module": "ace",
+"statusCode": 400
+}
+
+(long/lat out of range)
+{
+"message": "Invalid information passed to http://api.met.no/weatherapi",
+"module": "weather/forecast",
+"statusCode": 400
+}
+
+ACE
+if data=probability
+long/lat are not bounded
+
+ARCHIVE
+start,end just need to be passed, not actually set to anything
+if they are passed shitty values, there's a PHP error, not a JSON error
+
+EMBED
+image not required - defaults to current
+bad lat/long:
+{
+"message": "Invalid information passed to http://api.met.no/weatherapi",
+"module": "weather/forecast",
+"statusCode": 400
+}
+
+IMAGES
+action=list OR
+image=:img
+(not concurrently required)
+Nothing passed:
+{
+"message": "Parameter is missing from request: image",
+"module": "images",
+"statusCode": 404
+}
+{
+"message": "No such image type exists in the API: cress",
+"module": "images",
+"statusCode": 404
+}
+
+WEATHER
+bad lat/long
+{
+"message": "Invalid information passed to http://api.met.no/weatherapi",
+"module": "weather/forecast",
+"statusCode": 400
+}
+forecast - if passed anything but 0, defaults to true (default false)
+
+
+
+
+DEFAULT TRUE (all;weather)
+ - true
+&weather - false
+&weather= - false
+&weather=0 - false
+&weather=1 - false
+&weather=true - true
+&weather=false - false
+&weather=dlfkgj - false
+
+DEFAULT FALSE (weather;forecast)
+ - false
+&forecast - false
+&forecast= - false
+&forecast=0 - false
+&forecast=1 - true
+&forecast=true - true
+&forecast=false - true
+&forecase=sdkfj - true
+
+DEFAULT FALSE (all;images)
+ - false
+&images - false
+&images= - false
+&images=0 - false
+&images=1 - false
+&images=true - true
+&images=false - false
+&images=sldkjf - false

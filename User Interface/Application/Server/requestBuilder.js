@@ -4,6 +4,7 @@
  */
 
 "use strict";
+var edgeCaseDetector = require(__dirname + "/edgeCaseDetector.js");
 
 module.exports = function (ID, method, url, callback) {
     console.log(`[RB] [${ID}] Building request`);
@@ -30,6 +31,10 @@ function RequestBuilder (ID, method, query) {
     console.log(`[RB] [${ID}] Checking module`);
     self.module = "main";
     self.method = method;
+    if (!query.hasOwnProperty("type")) {
+        error("Parameter is missing from request: type", 404);
+        return;
+    }
     var ep;
     for (var prop in ENDPOINTS) {
         if (query.type === prop) {
@@ -38,7 +43,7 @@ function RequestBuilder (ID, method, query) {
         }
     }
     if (self.module === "main" || typeof ep === "undefined") {
-        error("Parameter is missing from request: type", 404);
+        error("API 'type'" + query.type + " not found", 400);
         return;
     }
     console.log(`[RB] [${ID}] Module OK (${self.module})`);
@@ -52,11 +57,31 @@ function RequestBuilder (ID, method, query) {
     }
 
     // check method
-    console.log(`[RB] [${ID}] Checking method`);
-    if (ep.method !== method) {
-        error("Invalid method: " + method, 405);
+    // The API doesn't support this check, so ignore it
+    console.warn(`[RB] [${ID}] Skipping method check`);
+    // console.log(`[RB] [${ID}] Checking method`);
+    // if (ep.method !== method) {
+    //     error("Invalid method: " + method, 405);
+    // }
+    // console.log(`[RB] [${ID}] Method OK (${method})`);
+
+    // invoke the edge case detector, if there is one
+    // this code could be removed if the api was consistent
+    console.log(`[RB] [${ID}] Checking for an edge case detection handler`);
+    if (edgeCaseDetector.hasOwnProperty(self.module)) {
+        console.log(`[RB] [${ID}] Invoking the edge case detection handler`);
+        // despite the callback, edgeCaseDetector is synchronous
+        edgeCaseDetector[self.module](ID, query, ep, function (err, newQuery) {
+            if (err) {
+                error(err.message, err.code);
+                return;
+            }
+            query = newQuery;
+        });
+        if (self.error) {
+            return;
+        }
     }
-    console.log(`[RB] [${ID}] Method OK (${method})`);
 
     // check parameters
     console.log(`[RB] [${ID}] Checking parameters`);
@@ -133,12 +158,12 @@ function RequestBuilder (ID, method, query) {
                 console.log(`[RB] [${ID}] [${ep.parameters[i].name}] range check is min/max`);
                 if (query[ep.parameters[i].name] < ep.parameters[i].range.min) {
                     console.log(`[RB] [${ID}] [${ep.parameters[i].name}] min failed: (${query[ep.parameters[i].name]} < ${ep.parameters[i].range.min})`);
-                    error("Invalid value for parameter: " + ep.parameters[i].name, 400);
+                    error("Invalid information passed to http://api.met.no/weatherapi", 400);
                     return;
                 }
                 if (query[ep.parameters[i].name] > ep.parameters[i].range.max) {
                     console.log(`[RB] [${ID}] [${ep.parameters[i].name}] max failed: (${query[ep.parameters[i].name]} > ${ep.parameters[i].range.max})`);
-                    error("Invalid value for parameter: " + ep.parameters[i].name, 400);
+                    error("Invalid information passed to http://api.met.no/weatherapi", 400);
                     return;
                 }
             } else {
@@ -156,7 +181,7 @@ function RequestBuilder (ID, method, query) {
         self.error = {
             message: message,
             module: self.module,
-            status: status
+            statusCode: status
         };
     }
 

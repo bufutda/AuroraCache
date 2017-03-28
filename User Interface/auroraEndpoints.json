@@ -76,6 +76,7 @@
         },
         {
             "path": "ace",
+            "comment": "lat/long are not bounded in the implementation",
             "method": "GET",
             "parameters": [
                 {
@@ -130,13 +131,14 @@
         },
         {
             "path": "embed",
+            "comment": "image not required in docs - defaults to 'current'",
             "method": "GET",
             "parameters": [
                 {
                     "name": "image",
-                    "required": true,
+                    "required": false,
                     "type": "string",
-                    "default": null,
+                    "default": "current",
                     "range": [
                         "current", "weather"
                     ]
