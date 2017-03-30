@@ -1,0 +1,32 @@
+{
+    "default_cache_time_ms": 100000,
+    "cache_table": [
+        {
+            "prefix": {
+                "type": "all"
+            },
+            "ttl_ms": 300000
+        },
+        {
+            "prefix": {
+                "type": "all",
+                "weather": "false"
+            },
+            "ttl_ms": 10000
+        },
+        {
+            "prefix": {
+                "type": "images",
+                "image": "cressy"
+            },
+            "ttl_ms": 69696969
+        }
+    ],
+    "version": "0.3",
+    "https": false,
+    "certPath": null,
+    "port": 9090,
+    "endpointFile": "auroraEndpoints.json",
+    "baseAPI": "https://api.auroras.live/v1/",
+    "redisPort": 6390
+}

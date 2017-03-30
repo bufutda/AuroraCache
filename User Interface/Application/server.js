@@ -8,6 +8,7 @@
  var https = require("https");
  var fs = require("fs");
  var requestHandler = require(__dirname + "/Server/requestHandler");
+ global.db = require(__dirname + "/Database/dbInterface.js");
  module.exports.invoke = function () {
      console.log("[DFCL] Starting Data Flow Control Logic");
      var server;
@@ -19,7 +20,9 @@
      }
      console.log("[DFCL] Listening on " + CONFIG.port);
      server.listen(CONFIG.port);
-     if (process.send) {
-         process.send("OK");
-     }
+     db.init(function () {
+         if (process.send) {
+             process.send("OK");
+         }
+     });
  };

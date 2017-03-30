@@ -11,7 +11,7 @@ module.exports.request = function (ID, req, callback) {
     var url = CONFIG.baseAPI + req.queryString();
     requestL({
         url: url,
-        encoding: "binary"
+        encoding: null
     }, function (err, response, body) {
         if (err) {
             console.error(`[FAD] [${ID}] Request error`);
@@ -19,13 +19,9 @@ module.exports.request = function (ID, req, callback) {
             callback({message: "Internal Requester Error", status: 500, module: req.module});
             return;
         }
+        db.setCache(ID, req, body, response.headers["content-type"]);
         switch (response.headers["content-type"]) {
             case "application/json":
-                try {
-                    body = JSON.parse(body.toString("utf-8"));
-                } catch (e) {
-                    console.error(`[FAD] [${ID}] Bad JSON response`);
-                }
                 callback(null, response.headers["content-type"], body, response.statusCode); // eslint-disable-line callback-return
                 return;
             case "image/jpeg":

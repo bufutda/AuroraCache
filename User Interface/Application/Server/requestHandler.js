@@ -7,7 +7,6 @@
 var requestBuilder = require(__dirname + "/requestBuilder");
 var dataRequester = require(__dirname + "/Aurora Data/requester");
 var customEndpoints = require(__dirname + "/customEndpoints");
-
 var connections = {};
 module.exports = function requestHandler (request, response) {
     console.log(`[R] Incoming request: ${request.method} ${request.url}`);
@@ -47,38 +46,44 @@ module.exports = function requestHandler (request, response) {
             return;
         }
 
-        console.warn(`[R] [${ID}] Skipping cache check`);
-        // TODO -> Use the built request to check the cache
-
-        // no cache entry; grab data from aurora
-        dataRequester.request(ID, requestObj, function callback (err, mime, aurora, status) {
+        db.getCache(ID, requestObj, function (err, cacheEntry) {
             if (err) {
-                console.error(`[DR] [${ID}] Error: ${err.message}`);
-                console.log(`[R] [${ID}] Ending request`);
-                delete connections[ID];
-                response.statusCode = err.status;
-                try {
-                    aurora = JSON.parse(aurora);
-                    response.statusCode = aurora.status ? aurora.status : err.status;
-                    response.end(JSON.stringify(aurora));
-                } catch (e) {
-                    response.end(JSON.stringify({message: err.message, module: err.module, status: err.status}));
-                }
+                console.error(`[DB] [${ID}] Error getting cache entry`);
+                console.error(err);
+                response.statusCode = 500;
+                response.end(JSON.stringify({message: "Internal server error", module: requestObj.module, statusCode: 500}));
                 return;
             }
-            response.setHeader("Content-Type", mime);
-            response.setHeader("transfer-encoding", "chunked");
-            response.statusCode = status;
-            if (mime === "application/json") {
-                aurora.note = "Powered by Auroras.live";
-                aurora = JSON.stringify(aurora);
-                response.end(aurora);
+            if (cacheEntry && cacheEntry.body && cacheEntry.mime) {
+                console.log(`[R] [${ID}] cache hit`);
+                var statusCode;
+                if (cacheEntry.mime === "application/json") {
+                    statusCode = JSON.parse(cacheEntry.body).statusCode ? JSON.parse(cacheEntry.body).statusCode : 200;
+                } else {
+                    statusCode = 200;
+                }
+                finishRequest(ID, response, cacheEntry.mime, statusCode, cacheEntry.body);
             } else {
-                response.end(aurora, "binary");
+                console.log(`[R] [${ID}] cache miss`);
+                dataRequester.request(ID, requestObj, function callback (err, mime, aurora, status) {
+                    if (err) {
+                        console.error(`[DR] [${ID}] Error: ${err.message}`);
+                        console.log(`[R] [${ID}] Ending request`);
+                        delete connections[ID];
+                        response.statusCode = err.status;
+                        try {
+                            aurora = JSON.parse(aurora.toString("utf-8"));
+                            response.statusCode = aurora.status ? aurora.status : err.status;
+                            response.end(JSON.stringify(aurora));
+                        } catch (e) {
+                            response.end(JSON.stringify({message: err.message, module: err.module, statusCode: err.status}));
+                        }
+                        return;
+                    }
+                    finishRequest(ID, response, mime, status, aurora);
+                    return;
+                });
             }
-            console.log(`[R] [${ID}] Ending request`);
-            delete connections[ID];
-            return;
         });
     });
 };
@@ -88,4 +93,20 @@ function endRequest (ID, code, response) {
     response.statusCode = code;
     delete connections[ID];
     response.end();
+}
+
+function finishRequest (ID, response, mime, status, aurora) {
+    response.setHeader("Content-Type", mime);
+    response.setHeader("transfer-encoding", "chunked");
+    response.statusCode = status;
+    if (mime === "application/json") {
+        aurora = JSON.parse(aurora.toString("utf-8"));
+        aurora.note = "Powered by Auroras.live";
+        aurora = JSON.stringify(aurora);
+        response.end(aurora);
+    } else {
+        response.end(aurora, "binary");
+    }
+    console.log(`[R] [${ID}] Ending request`);
+    delete connections[ID];
 }

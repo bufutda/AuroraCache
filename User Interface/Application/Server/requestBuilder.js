@@ -35,6 +35,11 @@ function RequestBuilder (ID, method, query) {
         error("Parameter is missing from request: type", 404);
         return;
     }
+    if (query.hasOwnProperty("no-caching") && query["no-caching"] === "true") {
+        self.nocache = true;
+    } else {
+        self.nocache = false;
+    }
     var ep;
     for (var prop in ENDPOINTS) {
         if (query.type === prop) {
@@ -180,7 +185,7 @@ function RequestBuilder (ID, method, query) {
 
         // all ok
         self.params[ep.parameters[i].name] = query[ep.parameters[i].name];
-        console.log(`[RB] [${ID}]`, self.params);
+        // console.log(`[RB] [${ID}]`, self.params);
     }
 
     function error (message, status) {
