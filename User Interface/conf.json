@@ -5,21 +5,85 @@
             "prefix": {
                 "type": "all"
             },
-            "ttl_ms": 300000
+            "ttl_ms": 1000000
         },
         {
             "prefix": {
                 "type": "all",
-                "weather": "false"
+                "weather": "true"
             },
-            "ttl_ms": 10000
+            "ttl_ms": 500000
+        },
+        {
+            "prefix": {
+                "type": "all",
+                "images": "true"
+            },
+            "ttl_ms": 2000000
+        },
+        {
+            "prefix": {
+                "type": "ace"
+            },
+            "ttl_ms": 500000
+        },
+        {
+            "prefix": {
+                "type": "ace",
+                "data": "all"
+            },
+            "ttl_ms": 1000000
+        },
+        {
+            "prefix": {
+                "type": "archive"
+            },
+            "ttl_ms": 1000000
+        },
+        {
+            "prefix": {
+                "type": "archive",
+                "action": "stats"
+            },
+            "ttl_ms": 1000000
+        },
+        {
+            "prefix": {
+                "type": "embed"
+            },
+            "ttl_ms": 500000
+        },
+        {
+            "prefix": {
+                "type": "images"
+            },
+            "ttl_ms": 1000000
         },
         {
             "prefix": {
                 "type": "images",
-                "image": "cressy"
+                "image": "rothney"
             },
-            "ttl_ms": 69696969
+            "ttl_ms": 2000000
+        },
+        {
+            "prefix": {
+                "type": "locations"
+            },
+            "ttl_ms": 2000000
+        },
+        {
+            "prefix": {
+                "type": "weather"
+            },
+            "ttl_ms": 100000
+        },
+        {
+            "prefix": {
+                "type": "weather",
+                "forecast": "true"
+            },
+            "ttl_ms": 50000
         }
     ],
     "version": "0.3",
