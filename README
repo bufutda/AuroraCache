@@ -1,0 +1,26 @@
+This software is designed to run on ubuntu, but can be configured to run on most
+distributions. You will need nodejs and redis-server in order to get started.
+https://nodejs.org/en/
+https://redis.io/
+Both are available from apt-get:
+$ sudo apt-get install nodejs
+$ sudo apt-get install redis-server
+
+From the root of the unpacked zipfile, you will then need to install the dependencies
+of the software:
+$ npm install
+
+The software is now ready to run on the default port (9090). If you would like to change
+any configuration settings, please edit the User Interface/conf.json file. To change what
+endpoints are cached, please edit the User Interface/auroraEndpoints.json file.
+
+Several scripts are provided for your convenience:
+User Interface/cache-connect.sh - connect to the redis command prompt
+User Interface/cache-flush.sh - flush the cache
+User Interface/cache-info.sh - report cache hits and misses
+
+If you have any questions, please email <s@watz.ky> and I will get back to you as
+soon as possible.
+
+To start the cache server, execute:
+$ node User\ Interface/startup.js

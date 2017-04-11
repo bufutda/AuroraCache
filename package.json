@@ -1,0 +1,9 @@
+{
+  "name": "auroracache",
+  "version": "1.0.0",
+  "description": "A cache server for auroras.live",
+  "dependencies": {
+      "redis": "^2.7.1",
+      "request": "^2.81.0"
+    }
+}
