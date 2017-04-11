@@ -1,6 +1,6 @@
 /*
  * Interface to interact with the database
- * Module: Database
+ * Module: Aurora Data Storage
  */
 "use strict";
 var redis = require("redis");
